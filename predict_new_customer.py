@@ -244,7 +244,7 @@ def training_history(hist):
     -------
     training and validation runs and history of runs.
     """
-    #%%
+
     keys = [i for i in hist.history.keys()]
     
     training_loss = hist.history[keys[0]] #this is cross_entrophy loss
@@ -271,8 +271,8 @@ def training_history(hist):
     plt.ylabel(keys[1])
     plt.legend(['training accuracy', 'validation accuracy'])
     plt.show
- 
-    #%%
+
+
 def report_metrics(y_true, y_pred):
     print(classification_report(y_true, y_pred))
     print(confusion_matrix(y_true, y_pred))
@@ -451,7 +451,7 @@ y_one_hot = one_hot.fit_transform(np.expand_dims(y_target, axis=-1))
 pickle.dump(one_hot, open('one_hot_scaler.pkl', 'wb')) 
 
 # Split test and train data
-x_train, x_test, y_train, y_test = train_test_split(x_features, 
+x_train, x_test, y_train, y_test = train_test_split(x_features_scaled, 
                                                     y_one_hot, 
                                                     test_size=0.3)
 
