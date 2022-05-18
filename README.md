@@ -28,7 +28,7 @@ https://www.kaggle.com/datasets/abisheksudarshan/customer-segmentation
 
 Training model architecture
 
-![image](image/model_accuracy.png)
+![image](image/model.png)
 
 
 
