@@ -326,20 +326,7 @@ df.isna().sum()
 msno.matrix(df)
 msno.bar(df)
 
-#%%
-# to recheck again
-# to remove ID and Var_1 as this is not features
 
-column_names = ['ID','Gender','Ever_Married','Age','Graduated',
-                'Profession','Work_Experience','Spending_Score',
-                'Family_Size','Var_1','Segmentation']
-
-data = pd.DataFrame(dummy_df)
-data.columns = column_names
-cor = data.corr()
-plt.figure(figsize=(12,10))
-sns.heatmap(cor,annot=True, cmap=plt.cm.Reds)
-plt.show() 
 
 #%% Step 3) Data Cleaning
 
