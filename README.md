@@ -14,7 +14,10 @@ Clone the repo and run it.
 
 train_new_customer.py is a script to train the data
 
-Deploy_new_customer.py is a script for deployment.
+predict_new_customer.py is a script for deployment of the test dataset
+
+predict_new_customer.h5 is the saved model
+
 
 # Outcome
 
