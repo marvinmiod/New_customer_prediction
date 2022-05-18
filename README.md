@@ -27,18 +27,16 @@ https://www.kaggle.com/datasets/abisheksudarshan/customer-segmentation
 # Images
 
 Training model architecture
-
 ![image](image/model.png)
 
+
+Training Epoch: loss and accuracy
+![image](image/training_epoch_loss_accuracy.png)
 
 
 
 Training process plotted using Tensorboard
-
 ![image](image/tensorboard.png)
-
-
-
 
 
 
