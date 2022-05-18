@@ -70,3 +70,11 @@ Training process plotted using Tensorboard
 Summary report and accuracy score
 ![image](image/Summary_report.png)
 
+
+Training & validation accuracy plot
+![image](image/training_accuracy.png)
+
+
+Training & validation loss plot
+![image](image/training_loss.png)
+
