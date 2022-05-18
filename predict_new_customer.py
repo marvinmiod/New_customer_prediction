@@ -16,12 +16,12 @@ The criteria of the project are as follows:
 import re
 import pandas as pd
 import numpy as np
-import re
+
 import datetime
 import os
 import pickle
 import missingno as msno
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.models import Sequential #model is only for Sequential Model
@@ -57,7 +57,7 @@ MODEL_SAVE_PATH = os.path.join(os.getcwd(), 'predict_new_customer.h5')
 LOG_PATH = os.path.join(os.getcwd(),'Log_new_customer')
 log_files = os.path.join(LOG_PATH, 
                          datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
-DATASET = os.path.join(os.getcwd(), 'dataset', 'train.csv')
+DATASET = os.path.join(os.getcwd(), 'dataset', 'new_customers.csv')
 
 #%%
 # Function Definition

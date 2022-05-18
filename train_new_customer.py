@@ -13,41 +13,32 @@ The criteria of the project are as follows:
 """
 
 
-import re
+
 import pandas as pd
 import numpy as np
-import re
 import datetime
 import os
 import pickle
 import missingno as msno
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.models import Sequential #model is only for Sequential Model
-from tensorflow.keras.layers import Dropout, Dense,  LSTM
-from tensorflow.keras.layers import Embedding, Bidirectional
+from tensorflow.keras.layers import Dropout, Dense
 from tensorflow.keras import Input, Model
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.layers import Dropout # to forcefully explore diff route
+from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import BatchNormalization # to add after hidden layer
 from tensorflow.keras.utils import plot_model
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
-from tensorflow.keras import Input
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import matplotlib.pyplot as plt
 import seaborn as sns
-import json
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 
 #%%
 
@@ -160,76 +151,6 @@ def create_model_dl(output_node, input_data_shape,
     plot_model(model)
 
     return model
-
-def create_model_6_layer(output_node, input_data_shape, 
-                    nb_nodes, activation='relu'):
-    """
-    This Function creates a model with x hidden layers
-    Last layers of the model comprises of softmax activation function.
-    ----------
-    output_node : Int
-        Contains the output number (vertical).
-    input_data_shape : Array
-        Contains the shape of the input.
-    nb_nodes : Int, optional
-        DESCRIPTION. The default is 32.
-    activation : String, optional
-        DESCRIPTION. The default is 'relu'.
-
-    Returns
-    -------
-    Created Model.
-
-    """
-    
-    input_1 = Input(shape=input_data_shape)
-#    flatten_layer = Flatten()(input_1) #must import Flatten on the top
-    hidden_1 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_1')(input_1)
-    # use activation=relu (for better result) to avoid exploding and vanishing gradients
-    #hidden_1 = Dense(nb_nodes, activation=activation, 
-    #                 name='hidden_layer_1')(input_1)
-    
-    batch_norm_1 = BatchNormalization()(hidden_1)
-    dropout_layer_1 = Dropout(0.2)(batch_norm_1) # dropout 0.2 means 20% from the layer
-    #hidden_2 = Dense(512, activation='sigmoid', name='hidden_layer_2')(dropout_layer_1)
-    # use activation=relu (for better result) to avoid exploding and vanishing gradients
-    hidden_2 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_2')(dropout_layer_1)    
-    batch_norm_2 = BatchNormalization()(hidden_2)
-    dropout_layer_2 = Dropout(0.2)(batch_norm_2)
-    
-    # add additional hidden layer below
-    hidden_3 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_3')(dropout_layer_2)
-    batch_norm_3 = BatchNormalization()(hidden_3)
-    dropout_layer_3 = Dropout(0.2)(batch_norm_3)
-    
-    hidden_4 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_4')(dropout_layer_3)
-    batch_norm_4 = BatchNormalization()(hidden_4)
-    dropout_layer_4 = Dropout(0.2)(batch_norm_4)
-    
-    hidden_5 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_5')(dropout_layer_4)
-    batch_norm_5 = BatchNormalization()(hidden_5)
-    dropout_layer_5 = Dropout(0.2)(batch_norm_5)
-    
-    hidden_6 = Dense(nb_nodes, activation=activation, 
-                     name='hidden_layer_6')(dropout_layer_5)
-    batch_norm_6 = BatchNormalization()(hidden_6)
-    dropout_layer_6 = Dropout(0.2)(batch_norm_6)
-    
-    #output
-    output_1 = Dense(output_node, activation='softmax', 
-                     name='output_layer')(dropout_layer_6)
-    
-    model = Model(inputs=[input_1], outputs=[output_1])
-    model.summary()
-    plot_model(model)
-
-    return model
-
 
 
 def training_history(hist):
@@ -413,7 +334,7 @@ plt.show()
 #%% # Step 5) Data Pre-processing - using MinMaxScaler
 #identify x,y train and test data
 
-# identify x_train dataset
+# to select few features
 #x1 = dummy_df_iterative['Profession'] # 0.22 
 #x2 = dummy_df_iterative['Work_Experience'] # 0.
 #x3 = dummy_df_iterative['Family_Size'] # 0.
@@ -429,11 +350,10 @@ column_names = ['ID','Gender','Ever_Married','Age','Graduated',
 
 
 
-
 # to drop ID and segmentation columns from x_features
 x_features = dummy_df_iterative.drop(columns=['ID','Segmentation']) 
 
-#drop ID, var_1 and segmentation from x_features
+#drop ID, var_1 and segmentation from x_features (not required)
 #x_features = dummy_df_iterative.drop(columns=['ID','Var_1','Segmentation']) 
 
 
@@ -456,9 +376,6 @@ x_train, x_test, y_train, y_test = train_test_split(x_features_scaled,
                                                     y_one_hot, 
                                                     test_size=0.3)
 
-# Convert x_train and x_test to 3 Dimension for the input shape for DeepLearning
-#x_train = np.expand_dims(x_train, axis=-1)
-#x_test = np.expand_dims(x_test, axis=-1)
 
 
 #%% Step 6a) Functional API Model compilation
@@ -474,69 +391,6 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics='accuracy')
 
-
-#%% Step 6b Functional API Model compilation (2 hidden layer)
-
-input_data_shape = x_features.shape[1] # auto-get x_features input shape
-output_node = y_one_hot.shape[1] # auto-get y_target_encoded output shape
-nb_nodes = 64
-model = create_model(output_node, input_data_shape, nb_nodes)
-#model = create_model_dl(output_node, input_data_shape, nb_nodes) 
-plot_model(model)
-
-model.compile(optimizer='adam', 
-              loss='categorical_crossentropy',
-              metrics='accuracy')
-
-#%% 6 layer model
-
-
-input_data_shape = x_features.shape[1] # auto-get x_features input shape
-output_node = y_one_hot.shape[1] # auto-get y_target_encoded output shape
-nb_nodes = 512
-model = create_model_6_layer(output_node, input_data_shape, nb_nodes)
-#model = create_model_dl(output_node, input_data_shape, nb_nodes) 
-plot_model(model)
-
-model.compile(optimizer='adam', 
-              loss='categorical_crossentropy',
-              metrics='accuracy')
-
-
-#%% Step 6b) Sequential Model compilation
-# uncomment the code below and comment the Step 6a) above to use this model
-
-
-# sequential model only accept 2 Dimension (539, 4) 
-# and throw error if uses 3D (539,4,1) 
-# if shape error don't use expand_dims (np.expand_dims(x_train, axis=-1))
-input_data_shape = x_features.shape[1]
-output_node = y_one_hot.shape[1]
-num_nodes = 512
-
-#print(input_shape=(x_train.shape[1],1))
-#print(x_train.shape[1])
-
-model = Sequential()
-model.add(Input(shape=input_data_shape))
-model.add(Dense(num_nodes, activation='softmax')) # hidden layer 1
-model.add(BatchNormalization())
-model.add(Dropout(0.2))
-model.add(Dense(num_nodes, activation='softmax')) # hidden layer 2
-model.add(BatchNormalization())
-model.add(Dropout(0.2))
-model.add(Dense(output_node, activation='softmax')) # output layer
-model.summary()
-plot_model(model)
-
-model.compile(optimizer='adam', 
-              loss='categorical_crossentropy',
-              metrics='acc')
-
-
-
-# Early Stopping monitor to find sweet spot and prevent overfitting
-#early_stopping_callback = EarlyStopping(monitor='val_loss', patience=3)
 
 
 
