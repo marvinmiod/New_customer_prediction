@@ -18,16 +18,16 @@ Deploy_new_customer.py is a script for deployment.
 
 # Outcome
 
-The accuracy of the model is between 49% - 52% using 3 hidden layers and 128 nodes.
+The accuracy of the model is 52% using 3 hidden layers and 128 nodes.
 
-The model accuracy  cannot be improve further even after adding 6 hidden layer and also reduced or added nodes from 16 to 1024 nodes.
+The model accuracy cannot be improve further even after adding 6 hidden layer and also reduced or added nodes from 16 to 1024 nodes.
 
 
 Suggestion 1: 
 - to perform feature selection to reduce number of input into the training model
 
 Suggestion 2: 
-- to use Machine Learning pipeline to perform feature selection
+- to use Machine Learning pipeline to perform feature selection and re-train the dataset using Machine Learning model
 
 
 Summary report:
