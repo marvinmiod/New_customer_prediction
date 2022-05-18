@@ -380,13 +380,10 @@ dummy_df['Segmentation'] = label_enc.fit_transform(dummy_df['Segmentation'])
 
 #%% Step 3b) Impute missing (NaN) values using Iterative imputer
 
-# remove ID column before impute as ID is just identification of customer
-dummy_df_reduced = dummy_df.drop(columns=['ID']) 
-
 
 # initialize imputer with iterative imputer and fit dummy_df into it.
 imputer = IterativeImputer()
-dummy_df_iterative = imputer.fit_transform(dummy_df_reduced)
+dummy_df_iterative = imputer.fit_transform(dummy_df)
 
 #convert to data frame then only can view back whether got NaN or not
 dummy_df_iterative = pd.DataFrame(dummy_df_iterative)
@@ -397,24 +394,19 @@ dummy_df_iterative.describe().T # all 8068 count data in each column
 msno.matrix(dummy_df_iterative) # visualise dataframe that has been imputed
 
 
-#%% Step 4) Features selection Using regression
-# to drop
+#%% Step 4) Check if there is strong correlation for Features selection 
+# outcome= no strong correlation exist
 
-column_names = ['Gender','Ever_Married','Age','Graduated',
+column_names = ['ID','Gender','Ever_Married','Age','Graduated',
                 'Profession','Work_Experience','Spending_Score',
                 'Family_Size','Var_1','Segmentation']
 
 dummy_df_iterative.columns = column_names
-
-#x_features = dummy_df_iterative.drop(columns=['ID']) 
-#cor = x_features.corr()
 cor = dummy_df_iterative.corr()
 plt.figure(figsize=(12,10))
 sns.heatmap(cor,annot=True, cmap=plt.cm.Reds)
 plt.show() 
 
-
-#%%
 
 
 
@@ -422,42 +414,37 @@ plt.show()
 #identify x,y train and test data
 
 # identify x_train dataset
-x1 = dummy_df_iterative['Profession'] # 0.22 
-x2 = dummy_df_iterative['Work_Experience'] # 0.
-x3 = dummy_df_iterative['Family_Size'] # 0.
-x4 = dummy_df_iterative['Gender'] # 0.
-x = [x1,x2,x3,x4]
-x_features = np.array(x).T 
+#x1 = dummy_df_iterative['Profession'] # 0.22 
+#x2 = dummy_df_iterative['Work_Experience'] # 0.
+#x3 = dummy_df_iterative['Family_Size'] # 0.
+#x4 = dummy_df_iterative['Gender'] # 0.
+#x = [x1,x2,x3,x4]
+#x_features = np.array(x).T 
 
 # uncomment below to take all columns as features and drop segmentation
-"""
+
 column_names = ['ID','Gender','Ever_Married','Age','Graduated',
                 'Profession','Work_Experience','Spending_Score',
                 'Family_Size','Var_1','Segmentation']
 
-#dummy_df_iterative.columns = column_names
 
 
 
-# to drop 2 columns from x_features
+# to drop ID and segmentation columns from x_features
 x_features = dummy_df_iterative.drop(columns=['ID','Segmentation']) 
 
 #drop ID, var_1 and segmentation from x_features
 #x_features = dummy_df_iterative.drop(columns=['ID','Var_1','Segmentation']) 
 
-"""
 
 # Scale the x_feature using MinMax Scaler so that value is within range of 0-1
 mm_scaler = MinMaxScaler()
 x_features_scaled = mm_scaler.fit_transform(x_features)
 pickle.dump(mm_scaler, open('minmax_scaler.pkl', 'wb'))
 
-#std_scaler = StandardScaler()
-#x_features_scaled = std_scaler.fit_transform(x_features)
 
-# y target segmentation
+# y target is column "segmentation" and perform one hot encoder
 y_target = dummy_df_iterative['Segmentation']
-#y_target = dummy_df['Segmentation']
 one_hot = OneHotEncoder(sparse=False)
 y_one_hot = one_hot.fit_transform(np.expand_dims(y_target, axis=-1))
 
@@ -475,17 +462,17 @@ x_train, x_test, y_train, y_test = train_test_split(x_features_scaled,
 
 
 #%% Step 6a) Functional API Model compilation
-# can accept input Shape 2D (539,4) or 3D (539, 4, 1)
+
 input_data_shape = x_features.shape[1] # auto-get x_features input shape
 output_node = y_one_hot.shape[1] # auto-get y_target_encoded output shape
-nb_nodes = 64
+nb_nodes = 128
 #create_model(output_node, input_data_shape, nb_nodes)
 model = create_model_dl(output_node, input_data_shape, nb_nodes) 
 plot_model(model)
 
 model.compile(optimizer='adam', 
               loss='categorical_crossentropy',
-              metrics='acc')
+              metrics='accuracy')
 
 
 #%% Step 6b Functional API Model compilation (2 hidden layer)
@@ -559,7 +546,7 @@ model.compile(optimizer='adam',
 tensorboard_callback = TensorBoard(log_dir=log_files, histogram_freq=1)
 early_stopping_callback = EarlyStopping(monitor='val_loss', patience=10)
 
-hist = model.fit(x_train, y_train, epochs=100, 
+hist = model.fit(x_train, y_train, epochs=50, 
                  validation_data=(x_test, y_test),
                  callbacks=[tensorboard_callback, early_stopping_callback])
 
@@ -570,7 +557,7 @@ print(hist.history.keys())
 training_history(hist)
 
 # to view the tensorboard
-# tensorboard --logdir "C:\DOCUMENT\DataScience\Deep_Learning_Practise\Exercise_Diabetes"
+# tensorboard --logdir "<path of log files>"
 
 
 #%% # Step 10) Discussion / Summary report 
