@@ -10,9 +10,13 @@ This is a project to analyse customer data and buying pattern to determine which
 # How to use it
 Clone the repo and run it.
 
-predicted_new_customer.py is a script to train the data
+train_new_customer.py is a script to train the data
 
 Deploy_new_customer.py is a script for deployment.
+
+# Outcome
+
+
 
 
 # Credit
@@ -32,6 +36,8 @@ Training model architecture
 Training process plotted using Tensorboard
 
 ![image](image/tensorboard.png)
+
+
 
 
 
