@@ -13,10 +13,8 @@ The criteria of the project are as follows:
 """
 
 
-import re
 import pandas as pd
 import numpy as np
-
 import datetime
 import os
 import pickle
@@ -25,29 +23,20 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.models import Sequential #model is only for Sequential Model
-from tensorflow.keras.layers import Dropout, Dense,  LSTM
-from tensorflow.keras.layers import Embedding, Bidirectional
+from tensorflow.keras.layers import Dropout, Dense
 from tensorflow.keras import Input, Model
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.layers import Dropout # to forcefully explore diff route
+from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import BatchNormalization # to add after hidden layer
 from tensorflow.keras.utils import plot_model
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
-from tensorflow.keras import Input
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import matplotlib.pyplot as plt
 import seaborn as sns
-import json
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 #%%
 

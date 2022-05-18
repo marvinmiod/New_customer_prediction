@@ -258,20 +258,6 @@ df.isna().sum()
 msno.matrix(df)
 msno.bar(df)
 
-#%%
-# to recheck again
-# to remove ID and Var_1 as this is not features
-
-column_names = ['ID','Gender','Ever_Married','Age','Graduated',
-                'Profession','Work_Experience','Spending_Score',
-                'Family_Size','Var_1','Segmentation']
-
-data = pd.DataFrame(dummy_df)
-data.columns = column_names
-cor = data.corr()
-plt.figure(figsize=(12,10))
-sns.heatmap(cor,annot=True, cmap=plt.cm.Reds)
-plt.show() 
 
 #%% Step 3) Data Cleaning
 
@@ -382,7 +368,7 @@ x_train, x_test, y_train, y_test = train_test_split(x_features_scaled,
 
 input_data_shape = x_features.shape[1] # auto-get x_features input shape
 output_node = y_one_hot.shape[1] # auto-get y_target_encoded output shape
-nb_nodes = 128
+nb_nodes = 64
 #create_model(output_node, input_data_shape, nb_nodes)
 model = create_model_dl(output_node, input_data_shape, nb_nodes) 
 plot_model(model)
@@ -418,9 +404,14 @@ training_history(hist)
 # Model analysis    
 
 report_generation(x_test, y_test)
-# Suggested improvement: to increase number of nodes to increase accuracy
-# Suggestion 2: Avoid using sigmoid to ensure model
-# suggestion 3: to add Early Stopping Monitor to prevent overfitting
+# The accuracy of the model is between 49% - 52% using 3 hidden layers and 128 nodes
+# The model accuracy cannot be improve further even after adding 6 hidden layer
+# and also reduced or added nodes from 16 to 1024 nodes.
+# Suggestion 1: 
+# to perform feature selection to reduce number of input into the training model
+
+# suggestion 2: 
+# to use Machine Learning pipeline to perform feature selection
 
 #%% Step 11) Save Model
 model.save(MODEL_SAVE_PATH)
