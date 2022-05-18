@@ -1,6 +1,6 @@
 
  # New_customer_prediction
- This model predict customer segment based on customer's attribute
+ This model predict customer segment (A, B, C, D) based on customer's attribute
 
 
 # Description
