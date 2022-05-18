@@ -42,6 +42,6 @@ Training process plotted using Tensorboard
 
 
 
-
-![image](image/predicted_label.png)
+Summary report and accuracy score
+![image](image/Summary_report.png)
 
